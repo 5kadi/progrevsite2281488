@@ -1,4 +1,4 @@
-const GHPATH = 'https://your-github-pages-or-domain-name.com/';
+const GHPATH = 'https://5kadi.github.io/progrevsite2281488/';
 // Change to a different app prefix name
 const APP_PREFIX = 'pwa_';
 const VERSION = 'version_01';

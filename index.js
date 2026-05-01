@@ -291,4 +291,187 @@ document.getElementById('videoModal').onclick = (e) => {
     }
 };
 
+// AI
+const DEEPSEEK_API_KEY = 'sk-fa56a2534e34406c807b5e35822658f0'; //#ПОХУЙ_ПИЛЛ
+const API_URL = 'https://api.deepseek.com/v1/chat/completions';
+let conversationHistory = [
+    { role: "system", content: "Ты — ИИ-помощник по IT в приложении «Техно-модуль». Ты помогаешь подросткам разобраться в программировании, нейросетях, веб-дизайне, аналитике данных, кибербезопасности. Отвечай на русском языке, дружелюбно и понятно для начинающих. Если не знаешь ответа — честно скажи об этом, не выдумывай. Будь позитивным и мотивирующим!" }
+];
+
+// Функция отправки запроса к DeepSeek API
+async function getAIResponse(userQuestion) {
+    // Добавляем вопрос пользователя в историю
+    conversationHistory.push({ role: "user", content: userQuestion });
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: conversationHistory,
+                temperature: 0.7,
+                max_tokens: 1000,
+                stream: false
+            })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error:', errorData);
+            throw new Error(`API ошибка: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const assistantReply = data.choices[0].message.content;
+        
+        // Сохраняем ответ в историю
+        conversationHistory.push({ role: "assistant", content: assistantReply });
+        
+        // Ограничиваем историю (последние 10 сообщений, но сохраняем system)
+        if (conversationHistory.length > 12) {
+            conversationHistory = conversationHistory.slice(0, 2).concat(conversationHistory.slice(-10));
+        }
+        
+        return assistantReply;
+        
+    } catch (error) {
+        console.error('Ошибка при вызове DeepSeek API:', error);
+        return `😕 Произошла ошибка при обращении к ИИ. Проверь интернет-соединение и попробуй ещё раз.
+
+    Ошибка: ${error.message}`;
+    }
+}
+
+// Функция для отображения сообщения в чате
+function addMessage(text, isUser) {
+    const container = document.getElementById('chatMessages');
+    const msgDiv = document.createElement('div');
+    // Экранируем HTML-теги для безопасности
+    const safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+    msgDiv.innerHTML = safeText
+    msgDiv.classList.add("message-bubble")
+
+    const wrapperDiv = document.createElement("div")
+    wrapperDiv.classList.add("message")
+    wrapperDiv.classList.add(isUser ? "user" : "ai")
+    wrapperDiv.appendChild(msgDiv)
+
+    container.appendChild(wrapperDiv);
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const question = input.value.trim();
+    console.log(question)
+    if (!question) return;
+    
+    // Показываем сообщение пользователя
+    addMessage(question, true);
+    input.value = '';
+    
+    // Показываем индикатор загрузки
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message ai';
+    loadingDiv.id = 'loadingIndicator';
+    //loadingDiv.innerHTML = auto;
+    
+    document.getElementById('chatMessages').appendChild(loadingDiv);
+    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+    
+    // Получаем ответ от настоящего ИИ
+    const answer = await getAIResponse(question);
+    
+    // Убираем индикатор загрузки
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    if (loadingIndicator) loadingIndicator.remove();
+    
+    // Показываем ответ
+    addMessage(answer, false);
+}
+
+// Обработчики событий
+document.getElementById('sendBtn').onclick = sendMessage;
+document.getElementById('chatInput').onkeypress = (e) => {
+    if (e.key === 'Enter') sendMessage();
+};
+
+async function getAIResponse(userQuestion) {
+    // Добавляем вопрос пользователя в историю
+    conversationHistory.push({ role: "user", content: userQuestion });
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: conversationHistory,
+                temperature: 0.7,
+                max_tokens: 1000,
+                stream: false
+            })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error:', errorData);
+            throw new Error(`API ошибка: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const assistantReply = data.choices[0].message.content;
+        
+        // Сохраняем ответ в историю
+        conversationHistory.push({ role: "assistant", content: assistantReply });
+        
+        // Ограничиваем историю (последние 10 сообщений, но сохраняем system)
+        if (conversationHistory.length > 12) {
+            conversationHistory = conversationHistory.slice(0, 2).concat(conversationHistory.slice(-10));
+        }
+        
+        return assistantReply;
+        
+    } catch (error) {
+        console.error('Ошибка при вызове DeepSeek API:', error);
+        return `😕 Произошла ошибка при обращении к ИИ. Проверь интернет-соединение и попробуй ещё раз. Ошибка: ${error.message}`;
+    }
+}
+
+if (DEEPSEEK_API_KEY === 'YOUR_DEEPSEEK_API_KEY') {
+    setTimeout(() => {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'error-message';
+        warningDiv.innerHTML = '⚠️ ВНИМАНИЕ: API-ключ не настроен! ИИ не будет работать.';
+        document.getElementById('chatMessages').appendChild(warningDiv);
+    }, 500);
+} else {
+    // Показываем сообщение, что ИИ готов
+    console.log('✅ DeepSeek API ключ настроен, ИИ готов к работе');
+}
+
+const hidePanel = document.getElementById("hidePanel")
+hidePanel.addEventListener("click", () => {
+    const chatContainer = document.getElementById("chatContainer")
+    chatContainer.classList.toggle("active")
+})
+
+const subscribeBtn = document.getElementById("subscribeBtn")
+subscribeBtn.addEventListener("click", () => {
+    const email = document.getElementById('emailInput')?.value;
+    if(email && email.includes('@')) {
+        alert(`Спасибо, ${email}! Жди приглашение на запуск.`);
+    } else {
+        alert('Введите корректный e-mail');
+    }
+})
+
+
 loadData();

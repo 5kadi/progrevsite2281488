@@ -11,6 +11,41 @@ min-height: 100vh;
 padding: 20px;
 }
 
+
+
+.badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+}
+
+section h1 {
+    font-size: 3.2rem;
+    background: linear-gradient(135deg, #BEF264, #38BDF8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+    padding-bottom: 40px;
+}
+
+section h2 {
+    font-size: 2.4rem;
+    color: #FFFF
+}
+
+section p {
+    font-size: 1.2rem;
+    color: #FFFF
+}
+
+span {
+    color: #FFFF
+}
+
+
 .app-container {
 max-width: 1200px;
 margin: 0 auto;
@@ -21,7 +56,7 @@ margin: 0 auto;
 display: flex;
 justify-content: space-between;
 align-items: center;
-margin-bottom: 30px;
+margin-bottom: 10px;
 padding: 20px;
 background: rgba(255,255,255,0.08);
 border-radius: 30px;
@@ -173,6 +208,9 @@ transition: all 0.2s;
 .close-panel:hover {
 background: rgba(239,68,68,0.5);
 }
+#hidePanel.close-panel:hover {
+    background: rgba(255,255,255,0.2)
+}
 
 .lessons-grid {
 display: grid;
@@ -263,6 +301,7 @@ font-size: 14px;
 display: flex;
 gap: 10px;
 margin-top: 15px;
+margin-bottom: 15px;
 }
 
 .btn-lesson {
@@ -342,10 +381,11 @@ margin-top: 20px;
 
 .btn {
 padding: 12px 25px;
-border: none;
+box-sizing: border-box;
 border-radius: 30px;
 font-weight: bold;
 cursor: pointer;
+display: inline-block;
 transition: all 0.2s;
 }
 
@@ -380,12 +420,13 @@ animation: fadeOut 2.5s ease;
 }
 
 .footer {
-text-align: center;
-margin-top: 30px;
-padding-top: 20px;
-border-top: 1px solid rgba(255,255,255,0.1);
-font-size: 12px;
-color: #64748b;
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    margin-bottom: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 12px;
+    color: #64748b;
 }
 
 @media (max-width: 768px) {
@@ -393,3 +434,129 @@ color: #64748b;
 .header { flex-direction: column; gap: 15px; text-align: center; }
 .xp-bar-bg { width: 100%; }
 }
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 30px;
+    padding: 25px;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.card .footer {
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-container {
+    height: 500px;
+    display: none;
+    flex-direction: column;
+}
+.chat-container.active {
+    display: flex;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.message {
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message.ai {
+    justify-content: flex-start;
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 12px 18px;
+    border-radius: 20px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.message.user .message-bubble {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 20px 20px 5px 20px;
+}
+
+.message.ai .message-bubble {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-radius: 20px 20px 20px 5px;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 12px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 15px;
+    border-radius: 30px;
+    border: 1px solid #3b82f6;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 16px;
+}
+
+.chat-send {
+    padding: 15px 25px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.typing-indicator {
+    color: #94a3b8;
+    font-style: italic;
+    padding: 8px;
+}
+
+.error-message {
+    color: #f87171;
+    padding: 10px;
+    text-align: center;
+}
+

@@ -1,0 +1,16 @@
+{
+    "name": "PROGREV",
+    "short_name": "progrev",
+    "scope": "/",
+    "start_url": ".",
+    "icons": [
+     {
+      "src": "public/apple-touch-icon.png",
+      "sizes": "16x16",
+      "type": "public/favicon.ico"
+     }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

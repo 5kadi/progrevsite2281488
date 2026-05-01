@@ -6,7 +6,7 @@
     "icons": [
      {
       "src": "public/favicon.ico",
-      "sizes": "16x16",
+      "sizes": "16x16"
      }
     ],
     "theme_color": "#ffffff",

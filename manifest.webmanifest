@@ -5,9 +5,8 @@
     "start_url": ".",
     "icons": [
      {
-      "src": "public/apple-touch-icon.png",
+      "src": "public/favicon.ico",
       "sizes": "16x16",
-      "type": "public/favicon.ico"
      }
     ],
     "theme_color": "#ffffff",

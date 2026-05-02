@@ -10,7 +10,6 @@
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="public/icon144.png" type="image/png">
     <meta name="pwa-capable" content="yes">
-    <link rel="stylesheet" href="styles.css">
     <title>Техно-модуль — полноценная IT-платформа с ИИ</title>
     <style>
         * {
@@ -696,7 +695,7 @@
             const isActive = userData.weekDays[day];
             const dayDiv = document.createElement('div');
             dayDiv.className = isActive ? 'active' : ''
-            dayDiv.innerHTML = `<div>${names[day]}</div><div>${isActive ? '✅' : '❌'}</div>;`
+            dayDiv.innerHTML = `<div>${names[day]}</div><div>${isActive ? '✅' : '❌'}</div>`
             dayDiv.onclick = () => {
                 if (!userData.weekDays[day]) { userData.weekDays[day] = true; userData.totalXP += 20; saveData(); updateAllUI(); showToast(`📅 +20 XP за отметку дня!`); }
                 else showToast(`✅ День уже отмечен!`);

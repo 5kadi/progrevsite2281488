@@ -3,102 +3,830 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="description" content="PROGREV PWA APP" />
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="public/icon144.png" type="image/png">
     <meta name="pwa-capable" content="yes">
     <link rel="stylesheet" href="styles.css">
-    <title>ITree - ИТ-дерево навыков</title>
+    <title>Техно-модуль — полноценная IT-платформа с ИИ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(102,126,234,0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #BEF264, #38BDF8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .user-header-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 30px;
+        }
+        .nav-item.active {
+            color: #fbbf24;
+            background: rgba(251,191,36,0.1);
+        }
+        .nav-icon { font-size: 24px; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 30px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        .league-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .bronze { background: #cd7f32; }
+        .silver { background: #c0c0c0; color: #1e293b; }
+        .gold { background: #ffd700; color: #1e293b; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-value { font-size: 32px; font-weight: bold; color: #fbbf24; }
+        .stat-label { font-size: 12px; color: #94a3b8; margin-top: 5px; }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .skill-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .skill-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); }
+        .skill-card.completed { background: rgba(74,222,128,0.2); border: 1px solid #4ade80; }
+        .skill-icon { font-size: 40px; margin-bottom: 10px; }
+        .skill-name { font-weight: bold; color: white; margin-bottom: 5px; }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .achievement-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+        }
+        .achievement-card.unlocked { background: rgba(251,191,36,0.2); border: 1px solid #fbbf24; }
+        .achievement-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.5; }
+        .achievement-card.unlocked .achievement-icon { opacity: 1; }
+        .achievement-name { font-size: 14px; color: white; margin-bottom: 5px; }
+
+        .chat-container { height: 500px; display: flex; flex-direction: column; }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+        .message { margin-bottom: 12px; display: flex; }
+        .message.user { justify-content: flex-end; }
+        .message.ai { justify-content: flex-start; }
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            word-wrap: break-word;
+        }
+        .message.user .message-bubble { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .message.ai .message-bubble { background: rgba(255,255,255,0.1); color: white; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 30px;
+            border: 1px solid #3b82f6;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .chat-send {
+            padding: 12px 20px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .shop-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+        }
+        .shop-item button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: #fbbf24;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .shop-item button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .question { margin-bottom: 20px; }
+        .question-text { color: white; font-weight: bold; margin-bottom: 10px; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        .option {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #cbd5e1;
+        }
+        .option:hover, .option.selected { background: #3b82f6; color: white; }
+        .test-result { text-align: center; padding: 20px; }
+        .recommendation-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        .name-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .name-modal.hidden { display: none; }
+        .name-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 40px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .name-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 40px;
+            border: 1px solid #3b82f6;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 40px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #64748b; }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 1000;
+            animation: fadeOut 3s ease;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .week-progress { display: flex; gap: 10px; justify-content: space-between; }
+        .week-day {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .week-day.active { background: #4ade80; color: #0f172a; }
+
+        .video-placeholder {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+
+        .video-placeholder:hover {
+            border-color: #3b82f6;
+            transform: scale(1.01);
+        }
+
+        .video-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .video-text {
+            color: #60a5fa;
+            font-size: 14px;
+        }
+
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-container {
+            background: #000;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+        }
+
+        .video-frame {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 20px;
+        }
+
+        .close-video {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .app-container { padding: 15px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
 <body>
-    
-    <div class="app-container">
-        <div class="header">
-            <div class="user-card">
-                <div class="avatar" id="avatarBtn">🌱</div>
-                <div class="stats">
-                    <div class="streak">🔥 <span id="streakCount">0</span> дней подряд</div>
-                    <div class="xp-bar-bg"><div class="xp-bar-fill" id="xpFill"></div></div>
-                    <div id="xpText" style="font-size:12px; color:#94a3b8;">0 XP</div>
-                </div>
-            </div>
-        </div>
-        
-        <section>
-            <h1>Техно-модуль:<br>профориентация и навыки в игре</h1>
-            <p style="font-size: 1.2rem; max-width: 700px; margin-bottom: 32px;">5 минут в день — и ты знаешь, кем хочешь стать.</p>
-            <a class="btn btn-primary" href="#start">🏁 Начать карьеру в IT →</a>
-        </section>
-        <div class="footer"></div>
-
-        <div class="tree-grid" id="skillsGrid"></div>
-
-        <div class="learning-panel" id="learningPanel">
-            <div class="panel-header">
-                <div class="panel-title" id="panelTitle">Обучение</div>
-                <button class="close-panel" id="closePanel">✕</button>
-            </div>
-            <div id="lessonsContainer"></div>
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" id="dailyBtn">📅 Ежедневный бонус</button>
-            <button class="btn btn-secondary" id="resetBtn">🔄 Сбросить прогресс</button>
-        </div>
-        <div class="footer">📚 Нажми на любой навык → выбери урок → изучи материал → получи XP!</div>
-
-        <!-- Вкладка ИИ-помощник (РАБОТАЕТ С НАСТОЯЩИМ ИИ) -->
-        <div class="tab-content active" id="tab-ai">
-            <div class="card">
-                <div class="panel-header">
-                    <div class="panel-title" id="panelTitle">🤖 ИИ-помощник на DeepSeek</div>
-                    <button class="close-panel" id="hidePanel">=</button>
-                </div>
-                <div class="chat-container" id="chatContainer">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message ai">
-                            <div class="message-bubble">Привет! Я ИИ-помощник на базе DeepSeek. Можешь спросить меня про IT, программирование, нейросети — я отвечу как настоящий ИИ! 🚀</div>
-                        </div>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Задай любой вопрос...">
-                        <button class="chat-send" id="sendBtn">Отправить</button>
-                    </div>
-                </div>
-                <div class="footer" style="margin-top: 15px;">💡 Работает на DeepSeek API — отвечает на любые вопросы про IT</div>
-            </div>
-        </div>
-
-        <!-- Подписка -->
-        <section id="start">
-            <div style="border-radius: 2rem; padding: 48px 48px; text-align: center;" class="card">
-                <h2>Не бойся кода — начни с игры</h2>
-                <p style="margin-bottom: 24px;">Стань первым, кто получит доступ к Техно-модулю</p>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 0 auto; max-width: 70%;;">
-                    <input type="email" class="chat-input" placeholder="Твой e-mail" id="emailInput" style="flex:1">
-                    <button class="chat-send" id="subscribeBtn">Записаться →</button>
-                </div>
-            </div>
-        </section>
-        <footer>© 2025 Техно-модуль — ИТ-профориентация нового поколения</footer>
+<div class="app-container">
+    <div class="hero-header">
+        <div class="logo">⚡ ТЕХНО-МОДУЛЬ ⚡</div>
+        <div class="user-header-info" id="headerInfo">Войдите в профиль</div>
     </div>
 
-    <div class="video-modal" id="videoModal">
-        <div class="video-container">
-            <button class="close-video" id="closeVideo">✕</button>
-            <iframe class="video-frame" id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    <div id="tabProfile" class="tab-content">
+        <div class="card">
+            <div class="card-title">👤 Мой профиль</div>
+            <div class="profile-avatar" id="profileAvatar">🌱</div>
+            <h2 id="profileName" style="color:white;">Гость</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value" id="profileXP">0</div><div class="stat-label">Всего XP</div></div>
+                <div class="stat-card"><div class="stat-value" id="profileStreak">0</div><div class="stat-label">Дней подряд</div></div>
+                <div class="stat-card"><div class="stat-value" id="profileLevel">1</div><div class="stat-label">Уровень</div></div>
+                <div class="stat-card"><div class="stat-value" id="profileSkills">0</div><div class="stat-label">Навыков освоено</div></div>
+            </div>
+            <div id="leagueBadge" class="league-badge bronze">🥉 Бронзовая лига</div>
+            <button id="dailyBonusBtn" class="btn btn-primary" style="margin-top:20px; width:100%;">📅 Ежедневный бонус (+30 XP)</button>
+        </div>
+        <div class="card">
+            <div class="card-title">📅 Прогресс за неделю</div>
+            <div id="weekProgress" class="week-progress"></div>
         </div>
     </div>
 
-    <script src="index.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(
-                '/progrevsite2281488/service-worker.js', {scope: '/progrevsite2281488/'}
-            )
+    <div id="tabSkills" class="tab-content">
+        <div class="card">
+            <div class="card-title">🌳 Дерево навыков</div>
+            <div class="skills-grid" id="skillsGrid"></div>
+            <div class="footer">📚 Нажми на навык, чтобы изучить или отметить пройденным</div>
+        </div>
+    </div>
+
+    <div id="tabAchievements" class="tab-content">
+        <div class="card">
+            <div class="card-title">🏆 Достижения</div>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+    </div>
+
+    <div id="tabHelp" class="tab-content">
+        <div class="card">
+            <div class="card-title">🤖 ИИ-помощник (DeepSeek)</div>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai"><div class="message-bubble">Привет! Я ИИ-помощник на базе DeepSeek. Задавай любые вопросы про IT, программирование, нейросети — я работаю в реальном времени! 🚀</div></div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Задай вопрос...">
+                    <button class="chat-send" id="sendBtn">➤</button>
+                </div>
+            </div>
+            <div class="footer">💡 Работает на DeepSeek API — отвечает как настоящая нейросеть</div>
+        </div>
+    </div>
+
+    <div id="tabExchange" class="tab-content">
+        <div class="card">
+            <div class="card-title">🎁 Обмен XP</div>
+            <div class="shop-items" id="shopContainer"></div>
+        </div>
+    </div>
+
+    <div id="tabCareer" class="tab-content">
+        <div class="card">
+            <div class="card-title">🧭 Профориентация</div>
+            <div id="testContainer"></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item" data-tab="profile"><div class="nav-icon">👤</div><span>Профиль</span></button>
+        <button class="nav-item" data-tab="skills"><div class="nav-icon">🌳</div><span>Навыки</span></button>
+        <button class="nav-item" data-tab="achievements"><div class="nav-icon">🏆</div><span>Достижения</span></button>
+        <button class="nav-item" data-tab="help"><div class="nav-icon">🤖</div><span>Помощь</span></button>
+        <button class="nav-item" data-tab="exchange"><div class="nav-icon">🎁</div><span>Обмен</span></button>
+        <button class="nav-item" data-tab="career"><div class="nav-icon">🧭</div><span>Профориентация</span></button>
+    </div>
+</div>
+
+
+
+<div id="nameModal" class="name-modal">
+    <div class="name-card">
+        <div style="font-size: 48px;">🚀</div>
+        <h2 style="color:white;">Как вас зовут?</h2>
+        <input type="text" id="userNameInput" class="name-input" placeholder="Введите ваше имя..." maxlength="25">
+        <button id="saveNameBtn" class="btn btn-primary">Начать обучение →</button>
+    </div>
+</div>
+
+<div class="video-modal" id="videoModal">
+    <div class="video-container">
+        <button class="close-video" id="closeVideo">✕</button>
+        <iframe class="video-frame" id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
+
+<script>
+    // ========== API КЛЮЧ DEEPSEEK (ваш ключ) ==========
+    const DEEPSEEK_API_KEY = 'sk-fa56a2534e34406c807b5e35822658f0';
+    const API_URL = 'https://api.deepseek.com/v1/chat/completions';
+
+    // ========== КОНФИГУРАЦИЯ ==========
+    const skillsConfig = [
+        { id: "python", name: "Python", icon: "🐍", desc: "Программирование", xpReward: 100, lessons: 5 },
+        { id: "webdev", name: "Веб-разработка", icon: "🌐", desc: "Сайты", xpReward: 100, lessons: 5 },
+        { id: "ai", name: "Нейросети", icon: "🧠", desc: "Искусственный интеллект", xpReward: 120, lessons: 5 },
+        { id: "design", name: "UI/UX Дизайн", icon: "🎨", desc: "Интерфейсы", xpReward: 90, lessons: 5 },
+        { id: "security", name: "Кибербезопасность", icon: "🔒", desc: "Защита данных", xpReward: 110, lessons: 5 }
+    ];
+
+    const achievementsConfig = [
+        { id: "first_skill", name: "Первые шаги", icon: "🌱", desc: "Освоить первый навык", condition: (d) => d.completedSkillsCount >= 1 },
+        { id: "skill_master", name: "Мастер", icon: "🏅", desc: "Освоить 3 навыка", condition: (d) => d.completedSkillsCount >= 3 },
+        { id: "guru", name: "Гуру", icon: "🏆", desc: "Освоить все 5 навыков", condition: (d) => d.completedSkillsCount >= 5 },
+        { id: "streak_7", name: "Выносливость", icon: "🔥", desc: "Серия 7 дней подряд", condition: (d) => d.streak >= 7 },
+        { id: "xp_1000", name: "Коллекционер", icon: "💰", desc: "Накопить 1000 XP", condition: (d) => d.totalXP >= 1000 },
+        { id: "xp_5000", name: "Магнат", icon: "💎", desc: "Накопить 5000 XP", condition: (d) => d.totalXP >= 5000 },
+        { id: "test_pass", name: "Искатель", icon: "🧭", desc: "Пройти профориентацию", condition: (d) => d.testCompleted === true },
+        { id: "helper", name: "Любознательный", icon: "🤖", desc: "Задать 10 вопросов ИИ", condition: (d) => d.questionsAsked >= 10 }
+    ];
+
+    const shopItems = [
+        { name: "🎬 Кинопоиск HD", price: 1500, desc: "3 месяца подписки" },
+        { name: "🎵 Яндекс Музыка", price: 1200, desc: "3 месяца подписки" },
+        { name: "🎧 VK Музыка", price: 1000, desc: "3 месяца подписки" }
+    ];
+
+    const testQuestions = [
+        { text: "Что ты делаешь, когда компьютер зависает?", options: ["Бью по клавиатуре", "Перезагружаю", "Иду пить чай", "Гуглю решение на телефоне"] },
+        { text: "Твой пароль от соцсетей — это...", options: ["qwerty123", "Имя кота", "Сгенерированный", "Из паспорта мамы"] },
+        { text: "Что ты чувствуешь, видя таблицу в Excel?", options: ["Эйфорию", "Лёгкую панику", "Желание закрыть", "Я это осилю"] },
+        { text: "Нейросеть нарисовала кота с тремя глазами. Твоя реакция?", options: ["Гениально!", "Странно, но мило", "Лучше бы я сам", "Тревожно за человечество"] },
+        { text: "Твоя идеальная работа в IT — это...", options: ["Писать код", "Рисовать интерфейсы", "Анализировать данные", "Защищать от хакеров"] }
+    ];
+
+    // ========== ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ==========
+    let userData = {
+        name: "", totalXP: 0, streak: 0, lastVisit: null, questionsAsked: 0, testCompleted: false,
+        weekDays: { Mon: false, Tue: false, Wed: false, Thu: false, Fri: false, Sat: false, Sun: false },
+        skills: {}, conversationHistory: []
+    };
+    skillsConfig.forEach(s => { userData.skills[s.id] = { completed: false, progress: 0, lessonsCompleted: 0 }; });
+
+    let currentQuestion = 0, userAnswers = [], achievementsUnlocked = [];
+
+    // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+    function loadData() {
+        const saved = localStorage.getItem('techno_platform_ai');
+        if (saved) {
+            try { const data = JSON.parse(saved); userData = { ...userData, ...data };
+            if (!userData.weekDays) userData.weekDays = { Mon: false, Tue: false, Wed: false, Thu: false, Fri: false, Sat: false, Sun: false };
+            if (data.achievements) achievementsUnlocked = data.achievements;
+            } catch(e) {}
         }
+        updateAllUI();
+        if (userData.name) document.getElementById('nameModal').classList.add('hidden');
+    }
+    function saveData() { localStorage.setItem('techno_platform_ai', JSON.stringify({ ...userData, achievements: achievementsUnlocked })); }
+    function showToast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+
+    function checkAchievements() {
+        const stats = {
+            completedSkillsCount: Object.values(userData.skills).filter(s => s.completed).length,
+            totalXP: userData.totalXP, streak: userData.streak,
+            testCompleted: userData.testCompleted, questionsAsked: userData.questionsAsked
+        };
+        achievementsConfig.forEach(ach => {
+        if (!achievementsUnlocked.includes(ach.id) && ach.condition(stats)) {
+                achievementsUnlocked.push(ach.id);
+                showToast(`🏆 Достижение разблокировано: ${ach.name}! +50 XP 🏆`);
+                userData.totalXP += 50;
+            }
+        });
+        saveData();
+    }
+
+    function getCompletedSkillsCount() { return Object.values(userData.skills).filter(s => s.completed).length; }
+    function getLevel() { return Math.floor(userData.totalXP / 500) + 1; }
+    function getLeague() {
+        const count = getCompletedSkillsCount();
+        if (count >= 5) return { name: "🏆 Золотая лига", class: "gold" };
+        if (count >= 2) return { name: "🥈 Серебряная лига", class: "silver" };
+        return { name: "🥉 Бронзовая лига", class: "bronze" };
+    }
+
+    function updateAllUI() {
+        document.getElementById('profileName').innerText = userData.name || "Гость";
+        document.getElementById('profileAvatar').innerText = userData.name ? userData.name.charAt(0).toUpperCase() : "🌱";
+        document.getElementById('profileXP').innerText = userData.totalXP;
+        document.getElementById('profileStreak').innerText = userData.streak;
+        document.getElementById('profileLevel').innerText = getLevel();
+        document.getElementById('profileSkills').innerText = `${getCompletedSkillsCount()}/${skillsConfig.length};`
+        const league = getLeague();
+        const badge = document.getElementById('leagueBadge');
+        badge.className = `league-badge ${league.class};`
+        badge.innerText = league.name;
+        document.getElementById('headerInfo').innerHTML = userData.name ? userData.name | `Уровень ${getLevel()}` | `${getCompletedSkillsCount()} / 5 навыков` : "Войдите в профиль";
+        updateSkillsUI(); updateAchievementsUI(); updateShopUI(); updateWeekProgressUI();
+    }
+
+    function updateSkillsUI() {
+        const container = document.getElementById('skillsGrid');
+        container.innerHTML = '';
+        skillsConfig.forEach(skill => {
+            const skillData = userData.skills[skill.id];
+            const isCompleted = skillData.completed;
+            const card = document.createElement('div');
+            card.className = `skill-card ${isCompleted ? 'completed' : ''}`
+            card.innerHTML = `<div class="skill-icon">${skill.icon}</div><div class="skill-name">${skill.name}</div><div class="skill-xp">+${skill.xpReward} XP</div><div class="skill-status">${isCompleted ? '✅ Пройден' : `📚 ${skillData.lessonsCompleted}/${skill.lessons} уроков`}</div>;`
+            card.onclick = () => {
+                if (isCompleted) showToast(`✅ Навык "${skill.name}" уже пройден!`);
+                else {
+                        const modal = document.getElementById('videoModal');
+                        const frame = document.getElementById('videoFrame');
+                        frame.src = "https://rutube.ru/play/embed/8cc87adcae8735201ab04f8fe595d7da/?playlist=856572"
+                        modal.classList.add('active');
+
+
+                        skillData.lessonsCompleted = Math.min(skillData.lessonsCompleted + 1, skill.lessons);
+                        if (skillData.lessonsCompleted >= skill.lessons && !skillData.completed) {
+                            skillData.completed = true; userData.totalXP += skill.xpReward;
+                            showToast(`🎉 Поздравляю! Ты освоил "${skill.name}" и получил +${skill.xpReward} XP! 🎉`);
+                            checkAchievements();
+                        } else { userData.totalXP += 25; showToast(`✨ Урок пройден! +25 XP! Осталось ${skill.lessons - skillData.lessonsCompleted} уроков ✨`); }
+                        saveData(); updateAllUI();
+                    }
+            };
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('videoModal').onclick = (e) => {
+        if (e.target === document.getElementById('videoModal')) {
+        document.getElementById('closeVideo').click();}
+    }
+    document.getElementById('closeVideo').onclick = () => {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        frame.src = '';
+        modal.classList.remove('active');
+    };
+
+    function updateAchievementsUI() {
+        const container = document.getElementById('achievementsGrid');
+        container.innerHTML = '';
+        achievementsConfig.forEach(ach => {
+            const isUnlocked = achievementsUnlocked.includes(ach.id);
+            const card = document.createElement('div');
+            card.className = `achievement-card ${isUnlocked ? 'unlocked' : ''};`
+            card.innerHTML = `<div class="achievement-icon">${ach.icon}</div><div class="achievement-name">${ach.name}</div><div class="achievement-desc">${ach.desc}</div>;`
+            container.appendChild(card);
+        });
+    }
+
+    function updateShopUI() {
+        const container = document.getElementById('shopContainer');
+        container.innerHTML = '';
+        shopItems.forEach(item => {
+            const canBuy = userData.totalXP >= item.price;
+            const div = document.createElement('div');
+            div.className = 'shop-item';
+            div.innerHTML = `<div style="font-size:32px;">${item.name.charAt(0)}</div><div style="font-weight:bold; color:white;">${item.name}</div><div>${item.price} XP</div><div style="font-size:11px; color:#94a3b8;">${item.desc}</div><button ${!canBuy ? 'disabled' : ''}>Обменять</button>;`
+            div.querySelector('button').onclick = () => {
+                if (canBuy) { userData.totalXP -= item.price; saveData(); updateAllUI(); showToast(`🎉 Вы обменяли ${item.price} XP на ${item.name}!`); }
+                else showToast(`❌ Не хватает XP! Нужно ${item.price} XP`);
+            };
+            container.appendChild(div);
+        });
+    }
+
+    function updateWeekProgressUI() {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const names = { Mon: "ПН", Tue: "ВТ", Wed: "СР", Thu: "ЧТ", Fri: "ПТ", Sat: "СБ", Sun: "ВС" };
+        const container = document.getElementById('weekProgress');
+        container.innerHTML = '';
+        days.forEach(day => {
+            const isActive = userData.weekDays[day];
+            const dayDiv = document.createElement('div');
+            dayDiv.className = isActive ? 'active' : ''
+            dayDiv.innerHTML = `<div>${names[day]}</div><div>${isActive ? '✅' : '❌'}</div>;`
+            dayDiv.onclick = () => {
+                if (!userData.weekDays[day]) { userData.weekDays[day] = true; userData.totalXP += 20; saveData(); updateAllUI(); showToast(`📅 +20 XP за отметку дня!`); }
+                else showToast(`✅ День уже отмечен!`);
+            };
+            container.appendChild(dayDiv);
+        });
+    }
+
+    function dailyBonus() {
+        const today = new Date().toDateString();
+        if (userData.lastVisit === today) { showToast("🎁 Бонус уже получен сегодня!"); return; }
+        if (userData.lastVisit) {
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            if (userData.lastVisit === yesterday.toDateString()) { userData.streak++; userData.totalXP += 50; showToast(`🔥 Серия ${userData.streak} дней! +50 XP! 🔥`); }
+            else { userData.streak = 1; userData.totalXP += 30; showToast(`🌱 Новая серия! +30 XP 🌱`); }
+        } else { userData.streak = 1; userData.totalXP += 30; showToast(`🎉 Первый день! +30 XP 🎉`); }
+        userData.lastVisit = today; saveData(); updateAllUI(); checkAchievements();
+    }
+
+    // ========== ИИ-ПОМОЩНИК (РАБОТАЕТ В РЕАЛЬНОМ ВРЕМЕНИ) ==========
+    let conversationHistory = [
+        { role: "system", content: "Ты — ИИ-помощник по IT в приложении «Техно-модуль». Отвечай на русском, дружелюбно, понятно для начинающих. Помогай с вопросами по программированию, нейросетям, веб-дизайну, аналитике, кибербезопасности. Будь полезным и мотивирующим!" }
+    ];
+
+    async function getAIResponse(userQuestion) {
+        conversationHistory.push({ role: "user", content: userQuestion });
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                body: JSON.stringify({ model: 'deepseek-chat', messages: conversationHistory, temperature: 0.7, max_tokens: 1000 })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            const reply = data.choices[0].message.content;
+            conversationHistory.push({ role: "assistant", content: reply });
+            if (conversationHistory.length > 20) conversationHistory = conversationHistory.slice(0, 5).concat(conversationHistory.slice(-15));
+            return reply;
+        } catch (error) {
+            console.error('DeepSeek API error:', error);
+            return "😕 Извини, я временно недоступен. Попробуй ещё раз через несколько секунд! А пока можешь изучить навыки или пройти профориентацию. 🚀";
+        }
+    }
+
+    function addMessage(text, isUser) {
+        const container = document.getElementById('chatMessages');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user' : 'ai'}`
+        msgDiv.innerHTML = `<div class="message-bubble">${text.replace(/</g, '&lt;')}</div>`
+        container.appendChild(msgDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const question = input.value.trim();
+        if (!question) return;
+        addMessage(question, true);
+        input.value = '';
+        userData.questionsAsked++;
+        saveData();
+        checkAchievements();
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message ai'
+        typingDiv.id = 'typing';
+        typingDiv.innerHTML = `<div class="message-bubble typing-indicator">🤖 Думаю...</div>;`
+        document.getElementById('chatMessages').appendChild(typingDiv);
+        const answer = await getAIResponse(question);
+        document.getElementById('typing')?.remove();
+        addMessage(answer, false);
+    }
+
+    // ========== ПРОФОРИЕНТАЦИЯ ==========
+    function renderTest() {
+        const container = document.getElementById('testContainer');
+        if (currentQuestion < testQuestions.length) {
+            const q = testQuestions[currentQuestion];
+            container.innerHTML = `<div class="question"><div class="question-text">📌 ${q.text}</div><div class="options">${q.options.map((opt, idx) => `<div class="option" data-opt="${idx}">${String.fromCharCode(65+idx)}. ${opt}</div>`).join('')}</div></div><div style="display:flex; gap:15px; margin-top:20px;"><button id="prevTestBtn" class="btn btn-secondary" ${currentQuestion === 0 ? 'disabled' : ''}>◀ Назад</button><button id="nextTestBtn" class="btn btn-primary">${currentQuestion === testQuestions.length-1 ? 'Завершить' : 'Далее ▶'}</button></div>;`
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.onclick = () => {
+                    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    userAnswers[currentQuestion] = parseInt(opt.dataset.opt);
+                };
+                if (userAnswers[currentQuestion] !== null && parseInt(opt.dataset.opt) === userAnswers[currentQuestion]) opt.classList.add('selected');
+            });
+            document.getElementById('prevTestBtn').onclick = () => { if (currentQuestion > 0) { currentQuestion--; renderTest(); } };
+            document.getElementById('nextTestBtn').onclick = () => {
+                if (userAnswers[currentQuestion] === undefined) { showToast("Выбери вариант!"); return; }
+                if (currentQuestion === testQuestions.length-1) finishTest();
+                else { currentQuestion++; renderTest(); }
+            };
+        }
+    }
+
+    function finishTest() {
+        const scores = { python:0, webdev:0, design:0, ai:0, security:0 };
+        userAnswers.forEach(ans => { if (ans === 0) scores.python += 2; else if (ans === 1) scores.design += 2; else if (ans === 2) scores.ai += 2; else if (ans === 3) scores.security += 2; });
+        const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+        const recommendations = sorted.slice(0,3).map(s => { const names = { python:"🐍 Python", webdev:"🌐 Веб-разработка", design:"🎨 UI/UX", ai:"🧠 Нейросети", security:"🔒 Кибербезопасность" }; return names[s[0]]; });
+        if (!userData.testCompleted) { userData.testCompleted = true; userData.totalXP += 100; saveData(); checkAchievements(); }
+        const container = document.
+        getElementById('testContainer');
+        container.innerHTML = `<div class="test-result"><div style="font-size:48px;">🎉</div><h3 style="color:white;">Твои IT-суперсилы:</h3><div style="margin:20px 0;">${recommendations.map(r => `<div class="recommendation-badge">⭐ ${r}</div>`).join('')}</div><button id="restartTest" class="btn btn-primary">Пройти тест заново</button></div>;`
+        document.getElementById('restartTest').onclick = () => { currentQuestion = 0; userAnswers = []; renderTest(); };
+        updateAllUI();
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.nav-item[data-tab="${tabId}"]`).classList.add('active');
+        if (tabId === 'career' && !document.getElementById('testContainer').innerHTML) renderTest();
+    }
+
+    // ========== ИНИЦИАЛИЗАЦИЯ ==========
+    document.getElementById('saveNameBtn').onclick = () => {
+        const name = document.getElementById('userNameInput').value.trim();
+        if (name) { userData.name = name; saveData(); document.getElementById('nameModal').classList.add('hidden'); updateAllUI(); showToast(`🎉 Добро пожаловать, ${name}! Начинай своё IT-путешествие! 🎉`); }
+        else alert("Введите имя!");
+    };
+    document.getElementById('sendBtn').onclick = sendMessage;
+    document.getElementById('chatInput').onkeypress = (e) => { if(e.key === 'Enter') sendMessage(); };
+    document.getElementById('dailyBonusBtn').onclick = dailyBonus;
+    document.querySelectorAll('.nav-item').forEach(btn => { btn.onclick = () => switchTab(btn.dataset.tab); });
+
+    loadData();
+    if (!userData.name) document.getElementById('nameModal').classList.remove('hidden');
+    switchTab('profile');
     </script>
 </body>
 </html>
-   
